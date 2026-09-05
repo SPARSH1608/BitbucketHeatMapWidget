@@ -1,10 +1,10 @@
 """Fetch Bitbucket commit activity for the authenticated user and render a
 GitHub-style contribution heatmap (SVG) plus a stats.json summary.
 
-Auth: HTTP basic auth with your Atlassian account email + an API token,
-read from BITBUCKET_EMAIL / BITBUCKET_API_TOKEN. The commit author is
-matched by Bitbucket account UUID (not by name/email), so it works
-regardless of what git identity was used to make the commit.
+Auth: Bitbucket's scoped API tokens use a bearer token, not basic auth,
+read from BITBUCKET_API_TOKEN. The commit author is matched by Bitbucket
+account UUID (not by name/email), so it works regardless of what git
+identity was used to make the commit.
 """
 
 import json
@@ -17,12 +17,11 @@ import requests
 API = "https://api.bitbucket.org/2.0"
 DAYS = 371  # 53 weeks, matches GitHub's profile heatmap span
 
-EMAIL = os.environ["BITBUCKET_EMAIL"]
 API_TOKEN = os.environ["BITBUCKET_API_TOKEN"]
 WORKSPACES_ENV = os.environ.get("BITBUCKET_WORKSPACES", "").strip()
 
 session = requests.Session()
-session.auth = (EMAIL, API_TOKEN)
+session.headers["Authorization"] = f"Bearer {API_TOKEN}"
 
 
 def get_json(url, params=None):

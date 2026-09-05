@@ -30,14 +30,19 @@ machine to machine.
    [id.atlassian.com/manage-profile/security/api-tokens](https://id.atlassian.com/manage-profile/security/api-tokens)
    (app passwords are deprecated). Scope it to Bitbucket with
    `read:account:bitbucket` and `read:repository:bitbucket` (or equivalent
-   read-only repo/account scopes). Auth is still basic auth — just with your
-   **Atlassian account email** as the username and the token as the password.
+   read-only repo/account scopes). Bitbucket's scoped API tokens use
+   **bearer auth**, not basic auth — no email/username needed, just the
+   token itself in an `Authorization: Bearer <token>` header. Verify it
+   works with:
+
+   ```bash
+   curl -H "Authorization: Bearer YOUR_API_TOKEN" https://api.bitbucket.org/2.0/user
+   ```
 
 2. **Push this repo to GitHub** (public, so the SVG can be embedded — or
    private, as long as the profile-README repo can still reach the raw URL).
 
 3. **Add repo secrets** (Settings → Secrets and variables → Actions):
-   - `BITBUCKET_EMAIL` — the email address on your Atlassian account
    - `BITBUCKET_API_TOKEN` — the API token from step 1
    - `BITBUCKET_WORKSPACES` *(optional)* — comma-separated workspace slugs to
      restrict to (e.g. `mycompany`). If omitted, all workspaces you're a
