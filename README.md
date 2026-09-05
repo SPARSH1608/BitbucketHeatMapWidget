@@ -26,17 +26,19 @@ machine to machine.
 
 ## Setup
 
-1. **Create a Bitbucket app password** (Bitbucket → Personal settings → App
-   passwords) with `Account: Read` and `Repositories: Read` scopes. (If your
-   Bitbucket workspace has since moved to API tokens, an API token works the
-   same way — it's just basic auth either way.)
+1. **Create an Atlassian API token** at
+   [id.atlassian.com/manage-profile/security/api-tokens](https://id.atlassian.com/manage-profile/security/api-tokens)
+   (app passwords are deprecated). Scope it to Bitbucket with
+   `read:account:bitbucket` and `read:repository:bitbucket` (or equivalent
+   read-only repo/account scopes). Auth is still basic auth — just with your
+   **Atlassian account email** as the username and the token as the password.
 
 2. **Push this repo to GitHub** (public, so the SVG can be embedded — or
    private, as long as the profile-README repo can still reach the raw URL).
 
 3. **Add repo secrets** (Settings → Secrets and variables → Actions):
-   - `BITBUCKET_USERNAME` — your Bitbucket username
-   - `BITBUCKET_APP_PASSWORD` — the app password/token from step 1
+   - `BITBUCKET_EMAIL` — the email address on your Atlassian account
+   - `BITBUCKET_API_TOKEN` — the API token from step 1
    - `BITBUCKET_WORKSPACES` *(optional)* — comma-separated workspace slugs to
      restrict to (e.g. `mycompany`). If omitted, all workspaces you're a
      member of are auto-discovered.
@@ -65,5 +67,5 @@ machine to machine.
   fresher.
 - Only commits reachable from each repo's default branch are counted (not
   every branch), to keep API usage reasonable.
-- Nothing beyond the generated SVG/JSON leaves this repo — your app
-  password/token stays in GitHub Actions secrets.
+- Nothing beyond the generated SVG/JSON leaves this repo — your API token
+  stays in GitHub Actions secrets.
